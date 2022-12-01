@@ -14,8 +14,6 @@ namespace Trivia
         /// <inheritdoc />
         public bool Add(string playerName)
         {
-            ThrowIfNotEnoughPlayers();
-
             return _decoratedGame.Add(playerName);
         }
 
@@ -28,7 +26,7 @@ namespace Trivia
         }
 
         /// <inheritdoc />
-        public bool WasCorrectlyAnswered()
+        public Player? WasCorrectlyAnswered()
         {
             ThrowIfNotEnoughPlayers();
 
@@ -36,7 +34,7 @@ namespace Trivia
         }
 
         /// <inheritdoc />
-        public bool WrongAnswer()
+        public Player? WrongAnswer()
         {
             ThrowIfNotEnoughPlayers();
 

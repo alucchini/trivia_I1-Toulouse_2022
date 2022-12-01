@@ -4,11 +4,15 @@ namespace Trivia
 {
     public class GameRunner
     {
-        private static bool _notAWinner;
+        private static Player? _winner;
 
         public static void Main(string[] args)
         {
             IGame aGame = new GameWhichHasEnoughPlayers(new Game());
+
+            aGame.Add("Ozzy");
+            aGame.Add("Lemmy");
+            aGame.Add("Tony");
 
             var rand = new Random();
 
@@ -18,13 +22,15 @@ namespace Trivia
 
                 if (rand.Next(9) == 7)
                 {
-                    _notAWinner = aGame.WrongAnswer();
+                    _winner = aGame.WrongAnswer();
                 }
                 else
                 {
-                    _notAWinner = aGame.WasCorrectlyAnswered();
+                    _winner = aGame.WasCorrectlyAnswered();
                 }
-            } while (_notAWinner);
+            } while (_winner == default);
+
+            Console.WriteLine(_winner + " a gagné.");
         }
     }
 }

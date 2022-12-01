@@ -132,7 +132,7 @@ namespace Trivia
             return "Rock";
         }
 
-        public bool WasCorrectlyAnswered()
+        public Player? WasCorrectlyAnswered()
         {
 
             if (_inPenaltyBox[_currentPlayer])
@@ -156,7 +156,7 @@ namespace Trivia
                 {
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
-                    return true;
+                    return null;
                 }
             }
             else
@@ -176,7 +176,7 @@ namespace Trivia
             }
         }
 
-        public bool WrongAnswer()
+        public Player? WrongAnswer()
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
@@ -184,13 +184,13 @@ namespace Trivia
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
-            return true;
+            return null;
         }
 
 
-        private bool DidPlayerWin()
+        private Player? DidPlayerWin()
         {
-            return !(_purses[_currentPlayer] == 6);
+            return _purses[_currentPlayer] == 6 ? new Player(_players[_currentPlayer]) : default;
         }
     }
 
