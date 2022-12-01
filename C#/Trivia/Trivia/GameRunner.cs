@@ -23,29 +23,41 @@ namespace Trivia
             aGame.Add("Lemmy");
             aGame.Add("Tony");
 
-            while (aGame.NumberOfPlayers >= Configuration.NombreMinimalJoueurs)
+            var gameAtStartBackup = aGame.Save();
+            var play = true;
+
+            do
             {
-                do
+                while (aGame.NumberOfPlayers >= Configuration.NombreMinimalJoueurs)
                 {
-                    aGame.Roll(rand.Next(5) + 1);
+                    do
+                    {
+                        aGame.Roll(rand.Next(5) + 1);
 
-                    _winner = rand.Next(9) == 7 ? aGame.WrongAnswer() : aGame.WasCorrectlyAnswered();
+                        _winner = rand.Next(9) == 7 ? aGame.WrongAnswer() : aGame.WasCorrectlyAnswered();
 
-                    aGame = aGame.Save().Restore();
-                } while (_winner == default);
+                        aGame = aGame.Save().Restore();
+                    } while (_winner == default);
 
-                Leaderboard.Enqueue(_winner);
-                aGame = aGame.GameWithoutAPlayer(_winner);
-                _winner = default;
-            }
+                    Leaderboard.Enqueue(_winner);
+                    aGame = aGame.GameWithoutAPlayer(_winner);
+                    _winner = default;
+                }
 
-            Console.WriteLine("LEADERBOARD");
-            var current = 1;
-            while (Leaderboard.TryDequeue(out var player))
-            {
-                Console.WriteLine($"{current} - {player}");
-                current++;
-            }
+                Console.WriteLine("LEADERBOARD");
+                var current = 1;
+                while (Leaderboard.TryDequeue(out var player))
+                {
+                    Console.WriteLine($"{current} - {player}");
+                    current++;
+                }
+
+                Console.WriteLine("Replay ?");
+
+                play = rand.Next() % 2 == 0;
+
+                aGame = gameAtStartBackup.Restore();
+            } while (play);
         }
     }
 }
