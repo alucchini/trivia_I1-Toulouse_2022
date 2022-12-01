@@ -10,18 +10,18 @@ namespace Trivia
 
         public static void Main()
         {
+            var rand = new Random();
+
             IGame<GameEnforcingMaxPlayers<GameWhichHasEnoughPlayers<Game>>> aGame =
                 new GameEnforcingMaxPlayers<GameWhichHasEnoughPlayers<Game>>(
                     new GameWhichHasEnoughPlayers<Game>(
-                        new Game()
+                        new Game(rand.Next() % 2 == 0)
                     )
                 );
 
             aGame.Add("Ozzy");
             aGame.Add("Lemmy");
             aGame.Add("Tony");
-
-            var rand = new Random();
 
             while (aGame.NumberOfPlayers >= Configuration.NombreMinimalJoueurs)
             {

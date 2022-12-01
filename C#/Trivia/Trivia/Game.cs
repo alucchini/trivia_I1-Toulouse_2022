@@ -6,6 +6,7 @@ namespace Trivia
 {
     public partial class Game : IGame<Game>
     {
+        private readonly bool _useTechnoInsteadOfRock;
         private readonly List<string> _players = new ();
 
         private readonly int[] _places = new int[Configuration.NombreMaximalJoueurs + 1];
@@ -18,9 +19,10 @@ namespace Trivia
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
-        public Game()
+        public Game(bool useTechnoInsteadOfRock)
         {
-            _questions = new QuestionsDeck("Pop", "Science", "Sports", "Rock");
+            _useTechnoInsteadOfRock = useTechnoInsteadOfRock;
+            _questions = new QuestionsDeck("Pop", "Science", "Sports", useTechnoInsteadOfRock ? "Techno" : "Rock");
         }
 
         // Constructeur copiant la partie en éliminant un joueur
@@ -119,7 +121,7 @@ namespace Trivia
             if (_places[_currentPlayer] == 2) return "Sports";
             if (_places[_currentPlayer] == 6) return "Sports";
             if (_places[_currentPlayer] == 10) return "Sports";
-            return "Rock";
+            return _useTechnoInsteadOfRock ? "Techno" : "Rock";
         }
 
         private void IncrementCurrentPlayer()
