@@ -7,7 +7,7 @@ namespace Trivia
     public partial class Game : IGame<Game>
     {
         private readonly bool _useTechnoInsteadOfRock;
-        private readonly List<string> _players = new ();
+        private readonly List<Player> _players = new ();
 
         private readonly int[] _places = new int[Configuration.NombreMaximalJoueurs + 1];
         private readonly int[] _purses = new int[Configuration.NombreMaximalJoueurs + 1];
@@ -28,7 +28,7 @@ namespace Trivia
         // Constructeur copiant la partie en éliminant un joueur
         private Game(Game copied, Player playerToRemove)
         {
-            var playerToRemoveId = copied._players.IndexOf(playerToRemove.ToString());
+            var playerToRemoveId = copied._players.IndexOf(playerToRemove);
 
             _currentPlayer = copied._currentPlayer;
             if(_currentPlayer == playerToRemoveId) IncrementCurrentPlayer();
@@ -46,11 +46,12 @@ namespace Trivia
             }
 
             _questions = copied._questions.Save().Restore();
+            _useTechnoInsteadOfRock = copied._useTechnoInsteadOfRock;
         }
 
         public bool Add(string playerName)
         {
-            _players.Add(playerName);
+            _players.Add(new Player(playerName));
             _places[NumberOfPlayers] = 0;
             _purses[NumberOfPlayers] = 0;
             _inPenaltyBox[NumberOfPlayers] = false;
@@ -182,7 +183,7 @@ namespace Trivia
 
         private Player? DidPlayerWin()
         {
-            return _purses[_currentPlayer] == 6 ? new Player(_players[_currentPlayer]) : default;
+            return _purses[_currentPlayer] == 6 ? _players[_currentPlayer] : default;
         }
     }
 

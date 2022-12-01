@@ -24,7 +24,7 @@ namespace Trivia
             aGame.Add("Tony");
 
             var gameAtStartBackup = aGame.Save();
-            var play = true;
+            bool play;
 
             do
             {
