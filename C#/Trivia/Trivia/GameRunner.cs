@@ -15,7 +15,7 @@ namespace Trivia
             IGame<GameEnforcingMaxPlayers<GameWhichHasEnoughPlayers<Game>>> aGame =
                 new GameEnforcingMaxPlayers<GameWhichHasEnoughPlayers<Game>>(
                     new GameWhichHasEnoughPlayers<Game>(
-                        new Game(rand.Next() % 2 == 0)
+                        new Game(rand.Next() % 2 == 0, (ushort) rand.Next(20))
                     )
                 );
 

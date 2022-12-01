@@ -7,15 +7,17 @@ namespace Trivia
     public partial class Game : IGame<Game>
     {
         private readonly bool _useTechnoInsteadOfRock;
+        private readonly ushort _goldsRequiredToWin;
         private readonly List<Player> _players = new ();
         private readonly QuestionsDeck _questions;
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
-        public Game(bool useTechnoInsteadOfRock)
+        public Game(bool useTechnoInsteadOfRock, ushort goldsRequiredToWin)
         {
             _useTechnoInsteadOfRock = useTechnoInsteadOfRock;
+            _goldsRequiredToWin = goldsRequiredToWin;
             _questions = new QuestionsDeck("Pop", "Science", "Sports", useTechnoInsteadOfRock ? "Techno" : "Rock");
         }
 
@@ -37,6 +39,7 @@ namespace Trivia
 
             _questions = copied._questions.Save().Restore();
             _useTechnoInsteadOfRock = copied._useTechnoInsteadOfRock;
+            _goldsRequiredToWin = copied._goldsRequiredToWin;
         }
 
         public void Add(string playerName)
@@ -177,7 +180,7 @@ namespace Trivia
 
         private Player? DidPlayerWin()
         {
-            return CurrentPlayer.Purse == 6 ? CurrentPlayer : default;
+            return CurrentPlayer.Purse == _goldsRequiredToWin ? CurrentPlayer : default;
         }
     }
 
