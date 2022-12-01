@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Trivia
 {
-    public class Game
+    public class Game : IGame
     {
         private readonly List<string> _players = new List<string>();
 
-        private readonly int[] _places = new int[6];
-        private readonly int[] _purses = new int[6];
+        private readonly int[] _places = new int[Configuration.NombreMaximalJoueurs + 1];
+        private readonly int[] _purses = new int[Configuration.NombreMaximalJoueurs + 1];
 
-        private readonly bool[] _inPenaltyBox = new bool[6];
+        private readonly bool[] _inPenaltyBox = new bool[Configuration.NombreMaximalJoueurs + 1];
 
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
@@ -32,14 +32,9 @@ namespace Trivia
             }
         }
 
-        public string CreateRockQuestion(int index)
+        private string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
-        }
-
-        public bool IsPlayable()
-        {
-            return (HowManyPlayers() >= 2);
         }
 
         public bool Add(string playerName)
@@ -139,6 +134,7 @@ namespace Trivia
 
         public bool WasCorrectlyAnswered()
         {
+
             if (_inPenaltyBox[_currentPlayer])
             {
                 if (_isGettingOutOfPenaltyBox)
