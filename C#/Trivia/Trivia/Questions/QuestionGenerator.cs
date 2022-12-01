@@ -1,11 +1,11 @@
-﻿namespace Trivia
+﻿namespace Trivia.Questions
 {
     internal class QuestionGenerator
     {
         private ulong _index;
         private readonly string _category;
-        
-        public string NextQuestion => $"{_category} Question {++ _index}";
+
+        public string NextQuestion => $"{_category} Question {++_index}";
 
         public QuestionGenerator(string category)
         {
@@ -32,7 +32,7 @@
             }
 
             /// <inheritdoc />
-            public QuestionGenerator Restore() => new (this);
+            public QuestionGenerator Restore() => new(this);
         }
     }
 }

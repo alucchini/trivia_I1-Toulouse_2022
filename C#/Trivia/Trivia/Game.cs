@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Trivia.Questions;
 
 namespace Trivia
 {
@@ -12,20 +13,14 @@ namespace Trivia
 
         private readonly bool[] _inPenaltyBox = new bool[Configuration.NombreMaximalJoueurs + 1];
 
-        private readonly QuestionGenerator _popQuestions;
-        private readonly QuestionGenerator _scienceQuestions;
-        private readonly QuestionGenerator _sportsQuestions;
-        private readonly QuestionGenerator _rockQuestions;
+        private readonly QuestionsDeck _questions;
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
         public Game()
         {
-            _popQuestions = new QuestionGenerator("Pop");
-            _scienceQuestions = new QuestionGenerator("Science");
-            _sportsQuestions = new QuestionGenerator("Sports");
-            _rockQuestions = new QuestionGenerator("Rock");
+            _questions = new QuestionsDeck("Pop", "Science", "Sports", "Rock");
         }
 
         // Constructeur copiant la partie en éliminant un joueur
@@ -48,10 +43,7 @@ namespace Trivia
                 _purses[index] = copied._purses[index];
             }
 
-            _popQuestions = copied._popQuestions.Save().Restore();
-            _rockQuestions = copied._rockQuestions.Save().Restore();
-            _scienceQuestions = copied._scienceQuestions.Save().Restore();
-            _sportsQuestions = copied._sportsQuestions.Save().Restore();
+            _questions = copied._questions.Save().Restore();
         }
 
         public bool Add(string playerName)
@@ -113,22 +105,7 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == "Pop")
-            {
-                Console.WriteLine(_popQuestions.NextQuestion);
-            }
-            if (CurrentCategory() == "Science")
-            {
-                Console.WriteLine(_scienceQuestions.NextQuestion);
-            }
-            if (CurrentCategory() == "Sports")
-            {
-                Console.WriteLine(_sportsQuestions.NextQuestion);
-            }
-            if (CurrentCategory() == "Rock")
-            {
-                Console.WriteLine(_rockQuestions.NextQuestion);
-            }
+            Console.WriteLine(_questions.NextQuestionForCategory(CurrentCategory()));
         }
 
         private string CurrentCategory()
