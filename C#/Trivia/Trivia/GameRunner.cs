@@ -18,7 +18,7 @@ namespace Trivia
 
             var rand = new Random();
 
-            while (aGame.HowManyPlayers() >= Configuration.NombreMinimalJoueurs)
+            while (aGame.NumberOfPlayers >= Configuration.NombreMinimalJoueurs)
             {
                 do
                 {

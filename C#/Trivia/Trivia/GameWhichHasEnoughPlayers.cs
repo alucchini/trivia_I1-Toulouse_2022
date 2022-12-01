@@ -2,80 +2,39 @@
 
 namespace Trivia
 {
-    internal class GameWhichHasEnoughPlayers<TGame> : IGame<GameWhichHasEnoughPlayers<TGame>>
+    internal class GameWhichHasEnoughPlayers<TGame> : GameDecorator<GameWhichHasEnoughPlayers<TGame>, TGame>
     {
-        private readonly IGame<TGame> _decoratedGame;
-
-        public GameWhichHasEnoughPlayers(IGame<TGame> decoratedGame)
+        public GameWhichHasEnoughPlayers(IGame<TGame> decoratedGame) 
+            : base(decoratedGame)
         {
-            _decoratedGame = decoratedGame;
         }
 
         /// <inheritdoc />
-        public bool Add(string playerName)
-        {
-            return _decoratedGame.Add(playerName);
-        }
+        protected override IGame<GameWhichHasEnoughPlayers<TGame>> Factory(IGame<TGame> game)
+            => new GameWhichHasEnoughPlayers<TGame>(game);
 
-        /// <inheritdoc />
-        public void Roll(int roll)
+        public override void Roll(int roll)
         {
             ThrowIfNotEnoughPlayers();
-
-            _decoratedGame.Roll(roll);
+            base.Roll(roll);
         }
-
-        /// <inheritdoc />
-        public Player? WasCorrectlyAnswered()
+        
+        public override Player? WasCorrectlyAnswered()
         {
             ThrowIfNotEnoughPlayers();
-
-            return _decoratedGame.WasCorrectlyAnswered();
+            return base.WasCorrectlyAnswered();
         }
-
-        /// <inheritdoc />
-        public Player? WrongAnswer()
+        
+        public override Player? WrongAnswer()
         {
             ThrowIfNotEnoughPlayers();
-
-            return _decoratedGame.WrongAnswer();
-        }
-
-        /// <inheritdoc />
-        public int HowManyPlayers() => _decoratedGame.HowManyPlayers();
-
-        /// <inheritdoc />
-        public IGame<GameWhichHasEnoughPlayers<TGame>> GameWithoutAPlayer(Player playerToRemove)
-        {
-            return new GameWhichHasEnoughPlayers<TGame>(_decoratedGame.GameWithoutAPlayer(playerToRemove));
-        }
-
-        /// <inheritdoc />
-        public IGameMemento<GameWhichHasEnoughPlayers<TGame>> Save() => new Memento(_decoratedGame.Save());
-
-        private bool IsPlayable()
-        {
-            return (HowManyPlayers() >= Configuration.NombreMinimalJoueurs);
+            return base.WrongAnswer();
         }
 
         private void ThrowIfNotEnoughPlayers()
         {
-            if (!IsPlayable())
+            if (NumberOfPlayers < Configuration.NombreMinimalJoueurs)
                 throw new Exception($"Au moins {Configuration.NombreMinimalJoueurs} joueurs requis.");
-        }
-
-        private class Memento : IGameMemento<GameWhichHasEnoughPlayers<TGame>>
-        {
-            private readonly IGameMemento<TGame> _decoratedMemento;
-
-            public Memento(IGameMemento<TGame> decoratedMemento)
-            {
-                _decoratedMemento = decoratedMemento;
-            }
-
-            /// <inheritdoc />
-            public IGame<GameWhichHasEnoughPlayers<TGame>> Restore()
-                => new GameWhichHasEnoughPlayers<TGame>(_decoratedMemento.Restore());
         }
     }
 }

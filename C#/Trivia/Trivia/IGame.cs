@@ -6,7 +6,7 @@
         void Roll(int roll);
         Player? WasCorrectlyAnswered();
         Player? WrongAnswer();
-        int HowManyPlayers();
+        int NumberOfPlayers { get; }
 
         IGame<TGame> GameWithoutAPlayer(Player playerToRemove);
         IGameMemento<TGame> Save();

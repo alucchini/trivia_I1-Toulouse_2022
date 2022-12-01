@@ -58,7 +58,7 @@ namespace Trivia
             _sportsQuestions = copied._sportsQuestions;
         }
 
-        private string CreateRockQuestion(int index)
+        private static string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
         }
@@ -66,25 +66,19 @@ namespace Trivia
         public bool Add(string playerName)
         {
             _players.Add(playerName);
-            _places[HowManyPlayers()] = 0;
-            _purses[HowManyPlayers()] = 0;
-            _inPenaltyBox[HowManyPlayers()] = false;
+            _places[NumberOfPlayers] = 0;
+            _purses[NumberOfPlayers] = 0;
+            _inPenaltyBox[NumberOfPlayers] = false;
 
             Console.WriteLine(playerName + " was added");
             Console.WriteLine("They are player number " + _players.Count);
             return true;
         }
 
-        public int HowManyPlayers()
-        {
-            return _players.Count;
-        }
+        public int NumberOfPlayers => _players.Count;
 
         /// <inheritdoc />
-        public IGame<Game> GameWithoutAPlayer(Player playerToRemove)
-        {
-            return new Game(this, playerToRemove);
-        }
+        public IGame<Game> GameWithoutAPlayer(Player playerToRemove) => new Game(this, playerToRemove);
 
         public void Roll(int roll)
         {
@@ -115,8 +109,8 @@ namespace Trivia
             }
             else
             {
-                _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                _places[_currentPlayer] += roll;
+                if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                 Console.WriteLine(_players[_currentPlayer]
                         + "'s new location is "
