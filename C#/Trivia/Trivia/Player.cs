@@ -6,6 +6,8 @@ namespace Trivia
     {
         public int Purse { get; private set; }
         public int Place { get; private set; }
+        public bool IsInPenaltyBox { get; private set; }
+
         private readonly string _name;
 
         public Player(string name)
@@ -18,9 +20,10 @@ namespace Trivia
             _name = memento.Name;
             Purse = memento.Purse;
             Place = memento.Place;
+            IsInPenaltyBox = memento.IsInPenaltyBox;
         }
 
-        public IMemento<Player> Save() => new Memento(_name, Purse, Place);
+        public IMemento<Player> Save() => new Memento(_name, Purse, Place, IsInPenaltyBox);
 
         /// <inheritdoc />
         public override string ToString() => _name;
@@ -36,7 +39,12 @@ namespace Trivia
             if (Place > 11) Place -= 12;
         }
 
-        private record Memento(string Name, int Purse, int Place) : IMemento<Player>
+        public void PutInPenaltyBox()
+        {
+            IsInPenaltyBox = true;
+        }
+
+        private record Memento(string Name, int Purse, int Place, bool IsInPenaltyBox) : IMemento<Player>
         {
             /// <inheritdoc />
             public Player Restore() => new (this);

@@ -8,9 +8,6 @@ namespace Trivia
     {
         private readonly bool _useTechnoInsteadOfRock;
         private readonly List<Player> _players = new ();
-        
-        private readonly bool[] _inPenaltyBox = new bool[Configuration.NombreMaximalJoueurs + 1];
-
         private readonly QuestionsDeck _questions;
 
         private int _currentPlayer;
@@ -35,8 +32,6 @@ namespace Trivia
             for (var index = 0; index <= Configuration.NombreMaximalJoueurs; index++)
             {
                 if(index == playerToRemoveId) continue;
-
-                _inPenaltyBox[index] = copied._inPenaltyBox[index];
                 if(copied._players.Count > index) _players.Add(copied._players[index]);
             }
 
@@ -47,7 +42,6 @@ namespace Trivia
         public void Add(string playerName)
         {
             _players.Add(new Player(playerName));
-            _inPenaltyBox[NumberOfPlayers] = false;
 
             Console.WriteLine(playerName + " was added");
             Console.WriteLine("They are player number " + _players.Count);
@@ -64,7 +58,7 @@ namespace Trivia
             Console.WriteLine(CurrentPlayer + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
 
-            if (_inPenaltyBox[_currentPlayer])
+            if (CurrentPlayer.IsInPenaltyBox)
             {
                 if (roll % 2 != 0)
                 {
@@ -132,7 +126,7 @@ namespace Trivia
         public Player? WasCorrectlyAnswered()
         {
 
-            if (_inPenaltyBox[_currentPlayer])
+            if (CurrentPlayer.IsInPenaltyBox)
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
@@ -173,7 +167,7 @@ namespace Trivia
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(CurrentPlayer + " was sent to the penalty box");
-            _inPenaltyBox[_currentPlayer] = true;
+            CurrentPlayer.PutInPenaltyBox();
 
             IncrementCurrentPlayer();
             return null;
