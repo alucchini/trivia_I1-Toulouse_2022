@@ -5,22 +5,22 @@ namespace Trivia
 {
     public partial class Game
     {
-        public IGameMemento<Game> Save()
+        public IMemento<IGame<Game>> Save()
             => new Memento(_players, _places, _purses, _inPenaltyBox,
                 _popQuestions, _scienceQuestions, _sportsQuestions, _rockQuestions,
                 _currentPlayer, _isGettingOutOfPenaltyBox);
 
-        private class Memento : IGameMemento<Game>
+        private class Memento : IMemento<IGame<Game>>
         {
             public readonly string[] Players;
             public readonly int[] Places;
             public readonly int[] Purses;
             public readonly bool[] InPenaltyBox;
 
-            public readonly string[] PopQuestions;
-            public readonly string[] ScienceQuestions;
-            public readonly string[] SportsQuestions;
-            public readonly string[] RockQuestions;
+            public readonly IMemento<QuestionGenerator> PopQuestions;
+            public readonly IMemento<QuestionGenerator> ScienceQuestions;
+            public readonly IMemento<QuestionGenerator> SportsQuestions;
+            public readonly IMemento<QuestionGenerator> RockQuestions;
 
             public readonly int CurrentPlayer;
             public readonly bool IsGettingOutOfPenaltyBox;
@@ -30,10 +30,10 @@ namespace Trivia
                 IEnumerable<int> places, 
                 IEnumerable<int> purses, 
                 IEnumerable<bool> inPenaltyBox,
-                IEnumerable<string> popQuestions,
-                IEnumerable<string> scienceQuestions,
-                IEnumerable<string> sportsQuestions,
-                IEnumerable<string> rockQuestions,
+                QuestionGenerator popQuestions,
+                QuestionGenerator scienceQuestions,
+                QuestionGenerator sportsQuestions,
+                QuestionGenerator rockQuestions,
                 int currentPlayer,
                 bool isGettingOutOfPenaltyBox)
             {
@@ -42,10 +42,10 @@ namespace Trivia
                 Purses = purses.ToArray();
                 InPenaltyBox = inPenaltyBox.ToArray();
 
-                PopQuestions = popQuestions.ToArray();
-                RockQuestions = rockQuestions.ToArray();
-                SportsQuestions = sportsQuestions.ToArray();
-                ScienceQuestions = scienceQuestions.ToArray();
+                PopQuestions = popQuestions.Save();
+                RockQuestions = rockQuestions.Save();
+                SportsQuestions = sportsQuestions.Save();
+                ScienceQuestions = scienceQuestions.Save();
 
                 CurrentPlayer = currentPlayer;
                 IsGettingOutOfPenaltyBox = isGettingOutOfPenaltyBox;
@@ -65,10 +65,10 @@ namespace Trivia
             _purses = memento.Purses;
             _inPenaltyBox = memento.InPenaltyBox;
 
-            _popQuestions = new LinkedList<string>(memento.PopQuestions);
-            _rockQuestions = new LinkedList<string>(memento.RockQuestions);
-            _sportsQuestions = new LinkedList<string>(memento.SportsQuestions);
-            _scienceQuestions = new LinkedList<string>(memento.ScienceQuestions);
+            _popQuestions = memento.PopQuestions.Restore();
+            _rockQuestions = memento.RockQuestions.Restore();
+            _sportsQuestions = memento.SportsQuestions.Restore();
+            _scienceQuestions = memento.ScienceQuestions.Restore();
         }
     }
 }

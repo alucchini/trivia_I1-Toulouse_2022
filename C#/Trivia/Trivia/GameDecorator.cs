@@ -33,15 +33,15 @@ namespace Trivia
             => Factory(_decoratedGame.GameWithoutAPlayer(playerToRemove));
 
         /// <inheritdoc />
-        public IGameMemento<TDecorator> Save() 
+        public IMemento<IGame<TDecorator>> Save() 
             => new Memento(_decoratedGame.Save(), Factory);
 
-        private class Memento : IGameMemento<TDecorator>
+        private class Memento : IMemento<IGame<TDecorator>>
         {
-            private readonly IGameMemento<TGame> _decoratedMemento;
+            private readonly IMemento<IGame<TGame>> _decoratedMemento;
             private readonly Func<IGame<TGame>, IGame<TDecorator>> _factoryMethod;
-
-            public Memento(IGameMemento<TGame> decoratedMemento, Func<IGame<TGame>, IGame<TDecorator>> factoryMethod)
+            
+            public Memento(IMemento<IGame<TGame>> decoratedMemento, Func<IGame<TGame>, IGame<TDecorator>> factoryMethod)
             {
                 _decoratedMemento = decoratedMemento;
                 _factoryMethod = factoryMethod;

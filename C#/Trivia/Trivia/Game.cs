@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Trivia
 {
@@ -13,23 +12,20 @@ namespace Trivia
 
         private readonly bool[] _inPenaltyBox = new bool[Configuration.NombreMaximalJoueurs + 1];
 
-        private readonly LinkedList<string> _popQuestions = new ();
-        private readonly LinkedList<string> _scienceQuestions = new ();
-        private readonly LinkedList<string> _sportsQuestions = new ();
-        private readonly LinkedList<string> _rockQuestions = new ();
+        private readonly QuestionGenerator _popQuestions;
+        private readonly QuestionGenerator _scienceQuestions;
+        private readonly QuestionGenerator _sportsQuestions;
+        private readonly QuestionGenerator _rockQuestions;
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
         public Game()
         {
-            for (var i = 0; i < 5000; i++)
-            {
-                _popQuestions.AddLast("Pop Question " + i);
-                _scienceQuestions.AddLast(("Science Question " + i));
-                _sportsQuestions.AddLast(("Sports Question " + i));
-                _rockQuestions.AddLast(CreateRockQuestion(i));
-            }
+            _popQuestions = new QuestionGenerator("Pop");
+            _scienceQuestions = new QuestionGenerator("Science");
+            _sportsQuestions = new QuestionGenerator("Sports");
+            _rockQuestions = new QuestionGenerator("Rock");
         }
 
         // Constructeur copiant la partie en éliminant un joueur
@@ -52,15 +48,10 @@ namespace Trivia
                 _purses[index] = copied._purses[index];
             }
 
-            _popQuestions = copied._popQuestions;
-            _rockQuestions = copied._rockQuestions;
-            _scienceQuestions = copied._scienceQuestions;
-            _sportsQuestions = copied._sportsQuestions;
-        }
-
-        private static string CreateRockQuestion(int index)
-        {
-            return "Rock Question " + index;
+            _popQuestions = copied._popQuestions.Save().Restore();
+            _rockQuestions = copied._rockQuestions.Save().Restore();
+            _scienceQuestions = copied._scienceQuestions.Save().Restore();
+            _sportsQuestions = copied._sportsQuestions.Save().Restore();
         }
 
         public bool Add(string playerName)
@@ -92,8 +83,8 @@ namespace Trivia
                     _isGettingOutOfPenaltyBox = true;
 
                     Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
-                    _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                    _places[_currentPlayer] += roll;
+                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                     Console.WriteLine(_players[_currentPlayer]
                             + "'s new location is "
@@ -124,23 +115,19 @@ namespace Trivia
         {
             if (CurrentCategory() == "Pop")
             {
-                Console.WriteLine(_popQuestions.First());
-                _popQuestions.RemoveFirst();
+                Console.WriteLine(_popQuestions.NextQuestion);
             }
             if (CurrentCategory() == "Science")
             {
-                Console.WriteLine(_scienceQuestions.First());
-                _scienceQuestions.RemoveFirst();
+                Console.WriteLine(_scienceQuestions.NextQuestion);
             }
             if (CurrentCategory() == "Sports")
             {
-                Console.WriteLine(_sportsQuestions.First());
-                _sportsQuestions.RemoveFirst();
+                Console.WriteLine(_sportsQuestions.NextQuestion);
             }
             if (CurrentCategory() == "Rock")
             {
-                Console.WriteLine(_rockQuestions.First());
-                _rockQuestions.RemoveFirst();
+                Console.WriteLine(_rockQuestions.NextQuestion);
             }
         }
 

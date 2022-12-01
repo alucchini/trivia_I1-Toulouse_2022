@@ -9,6 +9,6 @@
         int NumberOfPlayers { get; }
 
         IGame<TGame> GameWithoutAPlayer(Player playerToRemove);
-        IGameMemento<TGame> Save();
+        IMemento<IGame<TGame>> Save();
     }
 }
