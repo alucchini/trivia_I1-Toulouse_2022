@@ -44,6 +44,12 @@ namespace Trivia
         /// <inheritdoc />
         public int HowManyPlayers() => _decoratedGame.HowManyPlayers();
 
+        /// <inheritdoc />
+        public IGame GameWithoutAPlayer(Player playerToRemove)
+        {
+            return new GameWhichHasEnoughPlayers(_decoratedGame.GameWithoutAPlayer(playerToRemove));
+        }
+
         private bool IsPlayable()
         {
             return (HowManyPlayers() >= Configuration.NombreMinimalJoueurs);

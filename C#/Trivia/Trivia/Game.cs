@@ -23,13 +23,39 @@ namespace Trivia
 
         public Game()
         {
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < 5000; i++)
             {
                 _popQuestions.AddLast("Pop Question " + i);
                 _scienceQuestions.AddLast(("Science Question " + i));
                 _sportsQuestions.AddLast(("Sports Question " + i));
                 _rockQuestions.AddLast(CreateRockQuestion(i));
             }
+        }
+
+        // Constructeur copiant la partie en éliminant un joueur
+        private Game(Game copied, Player playerToRemove)
+        {
+            var playerToRemoveId = copied._players.IndexOf(playerToRemove.ToString());
+
+            _currentPlayer = copied._currentPlayer;
+            if(_currentPlayer == playerToRemoveId) IncrementCurrentPlayer();
+
+            _isGettingOutOfPenaltyBox = copied._isGettingOutOfPenaltyBox;
+
+            for (var index = 0; index <= Configuration.NombreMaximalJoueurs; index++)
+            {
+                if(index == playerToRemoveId) continue;
+
+                _inPenaltyBox[index] = copied._inPenaltyBox[index];
+                _places[index] = copied._places[index];
+                if(copied._players.Count > index) _players.Add(copied._players[index]);
+                _purses[index] = copied._purses[index];
+            }
+
+            _popQuestions = copied._popQuestions;
+            _rockQuestions = copied._rockQuestions;
+            _scienceQuestions = copied._scienceQuestions;
+            _sportsQuestions = copied._sportsQuestions;
         }
 
         private string CreateRockQuestion(int index)
@@ -52,6 +78,12 @@ namespace Trivia
         public int HowManyPlayers()
         {
             return _players.Count;
+        }
+
+        /// <inheritdoc />
+        public IGame GameWithoutAPlayer(Player playerToRemove)
+        {
+            return new Game(this, playerToRemove);
         }
 
         public void Roll(int roll)
@@ -132,6 +164,12 @@ namespace Trivia
             return "Rock";
         }
 
+        private void IncrementCurrentPlayer()
+        {
+            _currentPlayer++;
+            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+        }
+
         public Player? WasCorrectlyAnswered()
         {
 
@@ -147,15 +185,12 @@ namespace Trivia
                             + " Gold Coins.");
 
                     var winner = DidPlayerWin();
-                    _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
-
+                    IncrementCurrentPlayer();
                     return winner;
                 }
                 else
                 {
-                    _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                    IncrementCurrentPlayer();
                     return null;
                 }
             }
@@ -169,8 +204,7 @@ namespace Trivia
                         + " Gold Coins.");
 
                 var winner = DidPlayerWin();
-                _currentPlayer++;
-                if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                IncrementCurrentPlayer();
 
                 return winner;
             }
@@ -182,8 +216,7 @@ namespace Trivia
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
 
-            _currentPlayer++;
-            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+            IncrementCurrentPlayer();
             return null;
         }
 
