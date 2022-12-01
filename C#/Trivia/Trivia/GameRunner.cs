@@ -10,7 +10,12 @@ namespace Trivia
 
         public static void Main()
         {
-            IGame<GameWhichHasEnoughPlayers<Game>> aGame = new GameWhichHasEnoughPlayers<Game>(new Game());
+            IGame<GameEnforcingMaxPlayers<GameWhichHasEnoughPlayers<Game>>> aGame =
+                new GameEnforcingMaxPlayers<GameWhichHasEnoughPlayers<Game>>(
+                    new GameWhichHasEnoughPlayers<Game>(
+                        new Game()
+                    )
+                );
 
             aGame.Add("Ozzy");
             aGame.Add("Lemmy");
