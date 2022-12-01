@@ -4,19 +4,19 @@ using System.Linq;
 
 namespace Trivia
 {
-    public class Game : IGame
+    public partial class Game : IGame<Game>
     {
-        private readonly List<string> _players = new List<string>();
+        private readonly List<string> _players = new ();
 
         private readonly int[] _places = new int[Configuration.NombreMaximalJoueurs + 1];
         private readonly int[] _purses = new int[Configuration.NombreMaximalJoueurs + 1];
 
         private readonly bool[] _inPenaltyBox = new bool[Configuration.NombreMaximalJoueurs + 1];
 
-        private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
-        private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
-        private readonly LinkedList<string> _sportsQuestions = new LinkedList<string>();
-        private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _popQuestions = new ();
+        private readonly LinkedList<string> _scienceQuestions = new ();
+        private readonly LinkedList<string> _sportsQuestions = new ();
+        private readonly LinkedList<string> _rockQuestions = new ();
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
@@ -81,7 +81,7 @@ namespace Trivia
         }
 
         /// <inheritdoc />
-        public IGame GameWithoutAPlayer(Player playerToRemove)
+        public IGame<Game> GameWithoutAPlayer(Player playerToRemove)
         {
             return new Game(this, playerToRemove);
         }
@@ -219,7 +219,6 @@ namespace Trivia
             IncrementCurrentPlayer();
             return null;
         }
-
 
         private Player? DidPlayerWin()
         {

@@ -1,6 +1,6 @@
 ﻿namespace Trivia
 {
-    public interface IGame
+    public interface IGame<out TGame>
     {
         bool Add(string playerName);
         void Roll(int roll);
@@ -8,6 +8,7 @@
         Player? WrongAnswer();
         int HowManyPlayers();
 
-        IGame GameWithoutAPlayer(Player playerToRemove);
+        IGame<TGame> GameWithoutAPlayer(Player playerToRemove);
+        IGameMemento<TGame> Save();
     }
 }

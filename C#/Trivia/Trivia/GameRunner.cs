@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Trivia
 {
-    public class GameRunner
+    public static class GameRunner
     {
         private static Player? _winner;
-        private static Queue<Player> _leaderboard = new Queue<Player>();
+        private static readonly Queue<Player> Leaderboard = new ();
 
-        public static void Main(string[] args)
+        public static void Main()
         {
-            IGame aGame = new GameWhichHasEnoughPlayers(new Game());
+            IGame<GameWhichHasEnoughPlayers<Game>> aGame = new GameWhichHasEnoughPlayers<Game>(new Game());
 
             aGame.Add("Ozzy");
             aGame.Add("Lemmy");
@@ -24,24 +24,19 @@ namespace Trivia
                 {
                     aGame.Roll(rand.Next(5) + 1);
 
-                    if (rand.Next(9) == 7)
-                    {
-                        _winner = aGame.WrongAnswer();
-                    }
-                    else
-                    {
-                        _winner = aGame.WasCorrectlyAnswered();
-                    }
+                    _winner = rand.Next(9) == 7 ? aGame.WrongAnswer() : aGame.WasCorrectlyAnswered();
+
+                    aGame = aGame.Save().Restore();
                 } while (_winner == default);
 
-                _leaderboard.Enqueue(_winner);
+                Leaderboard.Enqueue(_winner);
                 aGame = aGame.GameWithoutAPlayer(_winner);
                 _winner = default;
             }
 
             Console.WriteLine("LEADERBOARD");
             var current = 1;
-            while (_leaderboard.TryDequeue(out var player))
+            while (Leaderboard.TryDequeue(out var player))
             {
                 Console.WriteLine($"{current} - {player}");
                 current++;

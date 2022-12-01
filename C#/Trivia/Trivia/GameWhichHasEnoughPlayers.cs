@@ -2,11 +2,11 @@
 
 namespace Trivia
 {
-    internal class GameWhichHasEnoughPlayers : IGame
+    internal class GameWhichHasEnoughPlayers<TGame> : IGame<GameWhichHasEnoughPlayers<TGame>>
     {
-        private readonly IGame _decoratedGame;
+        private readonly IGame<TGame> _decoratedGame;
 
-        public GameWhichHasEnoughPlayers(IGame decoratedGame)
+        public GameWhichHasEnoughPlayers(IGame<TGame> decoratedGame)
         {
             _decoratedGame = decoratedGame;
         }
@@ -45,10 +45,13 @@ namespace Trivia
         public int HowManyPlayers() => _decoratedGame.HowManyPlayers();
 
         /// <inheritdoc />
-        public IGame GameWithoutAPlayer(Player playerToRemove)
+        public IGame<GameWhichHasEnoughPlayers<TGame>> GameWithoutAPlayer(Player playerToRemove)
         {
-            return new GameWhichHasEnoughPlayers(_decoratedGame.GameWithoutAPlayer(playerToRemove));
+            return new GameWhichHasEnoughPlayers<TGame>(_decoratedGame.GameWithoutAPlayer(playerToRemove));
         }
+
+        /// <inheritdoc />
+        public IGameMemento<GameWhichHasEnoughPlayers<TGame>> Save() => new Memento(_decoratedGame.Save());
 
         private bool IsPlayable()
         {
@@ -59,6 +62,20 @@ namespace Trivia
         {
             if (!IsPlayable())
                 throw new Exception($"Au moins {Configuration.NombreMinimalJoueurs} joueurs requis.");
+        }
+
+        private class Memento : IGameMemento<GameWhichHasEnoughPlayers<TGame>>
+        {
+            private readonly IGameMemento<TGame> _decoratedMemento;
+
+            public Memento(IGameMemento<TGame> decoratedMemento)
+            {
+                _decoratedMemento = decoratedMemento;
+            }
+
+            /// <inheritdoc />
+            public IGame<GameWhichHasEnoughPlayers<TGame>> Restore()
+                => new GameWhichHasEnoughPlayers<TGame>(_decoratedMemento.Restore());
         }
     }
 }
