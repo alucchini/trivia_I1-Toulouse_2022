@@ -10,7 +10,6 @@ namespace Trivia
         private readonly List<Player> _players = new ();
 
         private readonly int[] _places = new int[Configuration.NombreMaximalJoueurs + 1];
-        private readonly int[] _purses = new int[Configuration.NombreMaximalJoueurs + 1];
 
         private readonly bool[] _inPenaltyBox = new bool[Configuration.NombreMaximalJoueurs + 1];
 
@@ -42,7 +41,6 @@ namespace Trivia
                 _inPenaltyBox[index] = copied._inPenaltyBox[index];
                 _places[index] = copied._places[index];
                 if(copied._players.Count > index) _players.Add(copied._players[index]);
-                _purses[index] = copied._purses[index];
             }
 
             _questions = copied._questions.Save().Restore();
@@ -53,7 +51,6 @@ namespace Trivia
         {
             _players.Add(new Player(playerName));
             _places[NumberOfPlayers] = 0;
-            _purses[NumberOfPlayers] = 0;
             _inPenaltyBox[NumberOfPlayers] = false;
 
             Console.WriteLine(playerName + " was added");
@@ -139,10 +136,10 @@ namespace Trivia
                 if (_isGettingOutOfPenaltyBox)
                 {
                     Console.WriteLine("Answer was correct!!!!");
-                    _purses[_currentPlayer]++;
+                    _players[_currentPlayer].AddOneGold();
                     Console.WriteLine(_players[_currentPlayer]
                             + " now has "
-                            + _purses[_currentPlayer]
+                            + _players[_currentPlayer].Purse
                             + " Gold Coins.");
 
                     var winner = DidPlayerWin();
@@ -158,10 +155,10 @@ namespace Trivia
             else
             {
                 Console.WriteLine("Answer was correct!!!!");
-                _purses[_currentPlayer]++;
+                _players[_currentPlayer].AddOneGold();
                 Console.WriteLine(_players[_currentPlayer]
                         + " now has "
-                        + _purses[_currentPlayer]
+                        + _players[_currentPlayer].Purse
                         + " Gold Coins.");
 
                 var winner = DidPlayerWin();
@@ -183,7 +180,7 @@ namespace Trivia
 
         private Player? DidPlayerWin()
         {
-            return _purses[_currentPlayer] == 6 ? _players[_currentPlayer] : default;
+            return _players[_currentPlayer].Purse == 6 ? _players[_currentPlayer] : default;
         }
     }
 
