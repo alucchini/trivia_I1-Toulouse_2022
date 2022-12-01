@@ -44,6 +44,11 @@ namespace Trivia
             IsInPenaltyBox = true;
         }
 
+        public void FreeFromPenaltyBox()
+        {
+            IsInPenaltyBox = false;
+        }
+
         private record Memento(string Name, int Purse, int Place, bool IsInPenaltyBox) : IMemento<Player>
         {
             /// <inheritdoc />

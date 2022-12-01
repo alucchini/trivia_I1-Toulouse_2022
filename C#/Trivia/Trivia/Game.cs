@@ -63,6 +63,7 @@ namespace Trivia
                 if (roll % 2 != 0)
                 {
                     _isGettingOutOfPenaltyBox = true;
+                    CurrentPlayer.FreeFromPenaltyBox();
 
                     Console.WriteLine(CurrentPlayer + " is getting out of the penalty box");
                     CurrentPlayer.Move(roll);
@@ -130,6 +131,7 @@ namespace Trivia
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
+                    CurrentPlayer.FreeFromPenaltyBox();
                     Console.WriteLine("Answer was correct!!!!");
                     CurrentPlayer.AddOneGold();
                     Console.WriteLine(CurrentPlayer
