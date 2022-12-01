@@ -14,7 +14,7 @@ namespace Trivia
         protected abstract IGame<TDecorator> Factory(IGame<TGame> game);
 
         /// <inheritdoc />
-        public virtual bool Add(string playerName) => _decoratedGame.Add(playerName);
+        public virtual void Add(string playerName) => _decoratedGame.Add(playerName);
 
         /// <inheritdoc />
         public virtual void Roll(int roll) => _decoratedGame.Roll(roll);

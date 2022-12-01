@@ -2,7 +2,7 @@
 {
     public interface IGame<out TGame>
     {
-        bool Add(string playerName);
+        void Add(string playerName);
         void Roll(int roll);
         Player? WasCorrectlyAnswered();
         Player? WrongAnswer();

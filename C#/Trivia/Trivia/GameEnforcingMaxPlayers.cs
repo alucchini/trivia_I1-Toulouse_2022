@@ -14,12 +14,12 @@ namespace Trivia
             => new GameEnforcingMaxPlayers<TGame>(game);
 
         /// <inheritdoc />
-        public override bool Add(string playerName)
+        public override void Add(string playerName)
         {
             if (NumberOfPlayers >= Configuration.NombreMaximalJoueurs)
                 throw new Exception($"Pas plus de {Configuration.NombreMaximalJoueurs} joueurs autorisés");
 
-            return base.Add(playerName);
+            base.Add(playerName);
         }
     }
 }

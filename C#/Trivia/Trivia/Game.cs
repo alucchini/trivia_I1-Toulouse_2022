@@ -44,14 +44,13 @@ namespace Trivia
             _useTechnoInsteadOfRock = copied._useTechnoInsteadOfRock;
         }
 
-        public bool Add(string playerName)
+        public void Add(string playerName)
         {
             _players.Add(new Player(playerName));
             _inPenaltyBox[NumberOfPlayers] = false;
 
             Console.WriteLine(playerName + " was added");
             Console.WriteLine("They are player number " + _players.Count);
-            return true;
         }
 
         public int NumberOfPlayers => _players.Count;
