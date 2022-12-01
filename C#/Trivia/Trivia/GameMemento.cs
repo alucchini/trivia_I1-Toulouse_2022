@@ -7,13 +7,12 @@ namespace Trivia
     public partial class Game
     {
         public IMemento<IGame<Game>> Save()
-            => new Memento(_players, _places, _inPenaltyBox,
+            => new Memento(_players, _inPenaltyBox,
                 _questions, _currentPlayer, _isGettingOutOfPenaltyBox, _useTechnoInsteadOfRock);
 
         private class Memento : IMemento<IGame<Game>>
         {
             public readonly IMemento<Player>[] Players;
-            public readonly int[] Places;
             public readonly bool[] InPenaltyBox;
 
             public readonly IMemento<QuestionsDeck> Questions;
@@ -24,8 +23,7 @@ namespace Trivia
 
 
             internal Memento(
-                IEnumerable<Player> players, 
-                IEnumerable<int> places,
+                IEnumerable<Player> players,
                 IEnumerable<bool> inPenaltyBox,
                 QuestionsDeck questionsDeck,
                 int currentPlayer,
@@ -33,7 +31,6 @@ namespace Trivia
                 bool useTechnoInsteadOfRock)
             {
                 Players = players.Select(p => p.Save()).ToArray();
-                Places = places.ToArray();
                 InPenaltyBox = inPenaltyBox.ToArray();
 
                 Questions = questionsDeck.Save();
@@ -53,7 +50,6 @@ namespace Trivia
             _isGettingOutOfPenaltyBox = memento.IsGettingOutOfPenaltyBox;
 
             _players = new List<Player>(memento.Players.Select(playerMemento => playerMemento.Restore()));
-            _places = memento.Places;
             _inPenaltyBox = memento.InPenaltyBox;
 
             _questions = memento.Questions.Restore();

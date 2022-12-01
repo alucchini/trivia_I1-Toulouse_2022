@@ -5,6 +5,7 @@ namespace Trivia
     public class Player : IEquatable<Player>
     {
         public int Purse { get; private set; }
+        public int Place { get; set; }
         private readonly string _name;
 
         public Player(string name)
@@ -16,9 +17,10 @@ namespace Trivia
         {
             _name = memento.Name;
             Purse = memento.Purse;
+            Place = memento.Place;
         }
 
-        public IMemento<Player> Save() => new Memento(_name, Purse);
+        public IMemento<Player> Save() => new Memento(_name, Purse, Place);
 
         /// <inheritdoc />
         public override string ToString() => _name;
@@ -28,7 +30,7 @@ namespace Trivia
             Purse++;
         }
 
-        private record Memento(string Name, int Purse) : IMemento<Player>
+        private record Memento(string Name, int Purse, int Place) : IMemento<Player>
         {
             /// <inheritdoc />
             public Player Restore() => new (this);
