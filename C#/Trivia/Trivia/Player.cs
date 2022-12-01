@@ -5,7 +5,7 @@ namespace Trivia
     public class Player : IEquatable<Player>
     {
         public int Purse { get; private set; }
-        public int Place { get; set; }
+        public int Place { get; private set; }
         private readonly string _name;
 
         public Player(string name)
@@ -28,6 +28,12 @@ namespace Trivia
         public void AddOneGold()
         {
             Purse++;
+        }
+
+        public void Move(int roll)
+        {
+            Place += roll;
+            if (Place > 11) Place -= 12;
         }
 
         private record Memento(string Name, int Purse, int Place) : IMemento<Player>

@@ -71,8 +71,7 @@ namespace Trivia
                     _isGettingOutOfPenaltyBox = true;
 
                     Console.WriteLine(CurrentPlayer + " is getting out of the penalty box");
-                    CurrentPlayer.Place += roll;
-                    if (CurrentPlayer.Place > 11) CurrentPlayer.Place -= 12;
+                    CurrentPlayer.Move(roll);
 
                     Console.WriteLine(CurrentPlayer
                                       + "'s new location is "
@@ -88,8 +87,7 @@ namespace Trivia
             }
             else
             {
-                CurrentPlayer.Place += roll;
-                if (CurrentPlayer.Place > 11) CurrentPlayer.Place -= 12;
+                CurrentPlayer.Move(roll);
 
                 Console.WriteLine(CurrentPlayer
                                   + "'s new location is "
