@@ -1,0 +1,1 @@
+/Users/manokist/Projets/Majeur/Logiciel/trivia_I1-Toulouse_2022/kotlin/src/test/kotlin/com/adaptionsoft/games/trivia/SomeTest.kt
